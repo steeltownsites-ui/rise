@@ -1,0 +1,27 @@
+name: Rise
+options:
+  bundleIdPrefix: com.markyreid
+  deploymentTarget:
+    iOS: "26.0"
+targets:
+  Rise:
+    type: application
+    platform: iOS
+    sources: [Rise]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.markyreid.rise
+        MARKETING_VERSION: "2.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_STYLE: Automatic
+    info:
+      path: Rise/Info.plist
+      properties:
+        CFBundleDisplayName: Rise
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        NSAlarmKitUsageDescription: "Rise rings your wake-up alarms. You switch them off by finishing a mission."
+        NSCameraUsageDescription: "Rise uses the camera to count your push-ups and squats, and for photo missions. Nothing is recorded or uploaded."
+        NSSupportsLiveActivities: true
