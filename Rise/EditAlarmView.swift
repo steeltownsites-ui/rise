@@ -71,7 +71,7 @@ struct EditAlarmView: View {
                     .padding(.vertical, 4)
                     Text(alarm.mission.blurb).font(.footnote).foregroundStyle(.secondary)
                     if alarm.mission.hasAmount {
-                        Stepper(value: $alarm.amount, in: 1...100) {
+                        Stepper(value: $alarm.amount, in: 1...(alarm.mission.isPose ? 1000 : 20), step: alarm.amount >= 50 ? 10 : 1) {
                             Text("\(alarm.amount) \(alarm.mission.unit)")
                         }
                     }
