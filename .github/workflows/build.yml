@@ -10,12 +10,21 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-26
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-26, macos-15-intel, macos-15]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
 
-      - name: Show Xcode
-        run: xcodebuild -version
+      - name: Pick newest Xcode 26
+        run: |
+          X=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1)
+          if [ -n "$X" ]; then sudo xcode-select -s "$X"; fi
+          xcodebuild -version
+          xcodebuild -version | grep -q "Xcode 2[6-9]" || { echo "No Xcode 26 on this runner"; exit 1; }
 
       - name: Generate project
         run: |
@@ -39,8 +48,8 @@ jobs:
       - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: build-${{ github.run_number }}
-          name: Rise build ${{ github.run_number }}
+          tag_name: build-${{ github.run_number }}-${{ matrix.runner }}
+          name: Rise build ${{ github.run_number }} (${{ matrix.runner }})
           body: Install Rise.ipa with Sideloadly or SideStore using your Apple ID.
           files: Rise.ipa
 
@@ -48,5 +57,5 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: build-log
+          name: build-log-${{ matrix.runner }}
           path: build.log
